@@ -21,7 +21,7 @@
 
 ### Potential improvements
 - Add error handling
-- Add unit tests
+- ~~Add unit tests~~ (Done)
 - Handle case when there is no notification from other instances when request is marked as inflight. As a possible solution it's possible to add timeout and fallback to call external API.
 - Move redis connection string to `.env` file.
 - Create redis client abstraction to encapsulate working with database in separate layer.
