@@ -1,18 +1,8 @@
-import * as redis from 'redis';
+import {getExternalPrice} from "./get-external-price";
+import {client} from "./init-redis";
 
-async function getExternalPrice(numberPlate: string): Promise<Price> {
-  console.log('Call 3rd party API for: ', numberPlate);
-
-  const price = Math.round(Math.random() * 100);
-  return new Promise<Price>((resolve) => {
-    setTimeout(() => resolve(price), 1000);
-  });
-}
-
-const PRICE_CACHE_HASH_NAME = 'prices';
-const INFLIGHT_REQUESTS_SET_NAME = 'inflight-requests';
-
-const client = redis.createClient({url: "redis://0.0.0.0:6379"});
+const PRICE_CACHE_HASH_NAME = "prices";
+const INFLIGHT_REQUESTS_SET_NAME = "inflight-requests";
 
 type Price = number;
 
@@ -99,7 +89,6 @@ export async function getPrice(numberPlate: string, skipCacheForRead: boolean = 
 }
 
 
-// TESTS
 async function main() {
   client.on("error", (error) => {
     console.log(error);
@@ -107,6 +96,11 @@ async function main() {
 
   await client.connect();
 
+  // To check it live
+  //makeTestRequests();
+}
+
+function makeTestRequests() {
   const numberPlate = "test11";
   const skipCache = false;
 
@@ -116,10 +110,10 @@ async function main() {
     const test2Promise = getPrice(numberPlate, skipCache);
 
     const test1 = await test1Promise;
-    console.log('First call: ', test1);
+    console.log("First call: ", test1);
 
     const test2 = await test2Promise;
-    console.log('Second call: ', test2);
+    console.log("Second call: ", test2);
   }, 100);
 }
 
